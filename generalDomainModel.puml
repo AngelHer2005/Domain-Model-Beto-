@@ -1,0 +1,47 @@
+@startuml generalDomainModel
+
+entity "WarrantyCard" {
+    + cardId: string
+    + title: string
+    + issuedDate: date
+    + design: Design
+    + data: WarrantyData
+}
+
+entity "Design" {
+    + designId: string
+    + name: string
+    + description: string
+    + dimensions: string ' Ej: "A4", "800x600", etc.
+    + theme: string      ' Ej: "dark", "light", "golden"
+}
+
+entity "WarrantyData" {
+    + frontContent: SectionContent
+    + backContent: SectionContent
+    + extraSections: SectionContent[]
+}
+
+entity "SectionContent" {
+    + sectionName: string  ' Ej: "Front", "Back", "Inside", etc.
+    + components: Component[]
+}
+
+entity "Component" {
+    + componentId: string
+    + type: string         ' Ej: "image", "text", "qr", "button"
+    + x: int
+    + y: int
+    + width: int
+    + height: int
+    + content: string      ' Texto visible, URL de imagen, texto QR, etc.
+    + style: string        ' Clases CSS, colores, etc.
+}
+
+WarrantyCard "1" -- "1" Design
+WarrantyCard "1" -- "1" WarrantyData
+WarrantyData "1" -- "1" SectionContent : front
+WarrantyData "1" -- "1" SectionContent : back
+WarrantyData "1" -- "0..*" SectionContent : extra
+SectionContent "1" -- "0..*" Component
+@enduml

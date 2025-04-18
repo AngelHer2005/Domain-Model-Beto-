@@ -1,0 +1,88 @@
+@startuml DomainModelRules
+
+entity "WarrantyCard" {
+    + cardId: string
+    + frontSide: FrontSide
+    + backSide: BackSide
+}
+
+entity "FrontSide" {
+    + mainTitle: string
+    + pageLink: string
+    + qrCodes: QRCode[]
+    + benefits: Benefit[]     
+    + callToAction: CallToAction   
+    + images: Image[]
+}
+
+entity "BackSide" {
+    + welcomeMessage: string
+    + contactInfo: ContactInfo[]
+    + qrCodes: QRCode[]
+    + images: Image[]
+}
+
+entity "QRCode" {
+    + type: string
+    + url: string
+}
+
+entity "ContactInfo" {
+    + email: string
+    + physicalAddress: string
+}
+
+entity "Image" {
+    + imageUrl: string
+    + altText: string
+    + x: int  /' coordenada horizontal en píxeles '/
+    + y: int  /' coordenada vertical en píxeles '/
+    + width: int  
+    + height: int 
+}
+
+// Relaciones
+WarrantyCard "1" -- "1" FrontSide
+WarrantyCard "1" -- "1" BackSide
+FrontSide "1" -- "0..*" QRCode
+FrontSide "1" -- "0..*" Image
+BackSide "1" -- "0..*" QRCode
+BackSide "1" -- "1..*" ContactInfo
+BackSide "1" -- "0..*" Image
+
+' Reglas de negocio '
+note top of WarrantyCard
+- El cardId debe ser único.
+- Debe existir obligatoriamente una FrontSide y una BackSide.
+end note
+
+note top of FrontSide
+- mainTitle no debe estar vacío.
+- pageLink debe ser una URL válida.
+- callToAction debe estar presente.
+- Puede tener hasta 5 códigos QR.
+end note
+
+note top of BackSide
+- welcomeMessage debe contener al menos 10 caracteres.
+- Debe tener al menos un ContactInfo.
+- Puede tener hasta 2 códigos QR.
+end note
+
+note top of QRCodea
+- El tipo debe ser "link", "video", o "document".
+- La URL debe ser válida.
+end note
+
+note top of ContactInfo
+- El email debe ser válido (formato estándar).
+- physicalAddress no debe estar vacío.
+end note
+
+note top of Image
+- width y height deben ser mayores a 0.
+- x e y deben estar dentro de los límites del diseño (por definir).
+- altText debe tener entre 5 y 100 caracteres.
+end note
+
+@enduml

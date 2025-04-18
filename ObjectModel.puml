@@ -1,0 +1,57 @@
+@startuml ObjectModel
+
+class "WarrantyCard" {
+    + cardId: string
+    + frontSide: FrontSide
+    + backSide: BackSide
+}
+
+class "FrontSide" {
+    + mainTitle: string
+    + pageLink: string
+    + qrCodes: QRCode[]
+    + benefits: Benefit[]
+    + callToAction: CallToAction
+    + images: Image[]
+}
+
+class "BackSide" {
+    + welcomeMessage: string
+    + contactInfo: ContactInfo[]
+    + qrCodes: QRCode[]
+    + images: Image[]
+}
+
+class "QRCode" {
+    + type: string
+    + url: string
+}
+
+class "Benefit" {
+    + description: string
+}
+
+class "ContactInfo" {
+    + email: string
+    + physicalAddress: string
+}
+
+
+class "Image" {
+    + imageUrl: string
+    + altText: string
+    + x: int  /'coordenada horizontal en píxeles'/
+    + y: int  /' coordenada vertical en píxeles'/
+    + width: int  
+    + height: int 
+}
+
+WarrantyCard "1" -- "1" FrontSide
+WarrantyCard "1" -- "1" BackSide
+FrontSide "1" -- "0..*" QRCode
+FrontSide "1" -- "0..*" Benefit
+FrontSide "1" -- "0..*" Image
+BackSide "1" -- "0..*" QRCode
+BackSide "1" -- "1" ContactInfo
+BackSide "1" -- "0..*" Image
+@enduml
